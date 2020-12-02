@@ -111,9 +111,10 @@ def main():
             print(cmd)
             output = subprocess.check_output(cmd)
             srpm = output.splitlines()[-1].split()[-1].strip().decode('utf-8')
+            timeout = 60 * 60 * 12 # 12 hours
 
             ret = None
-            cmd = [tools['copr-cli'], 'build', '-r', chroot, '--nowait', repo, srpm]
+            cmd = [tools['copr-cli'], 'build', '--timeout', str(timeout), '-r', chroot, '--nowait', repo, srpm]
             print(cmd)
             if not args.dryrun:
                 for timeout in [0, 60, 120, 180, 240, 300, 6000]:
