@@ -48,6 +48,7 @@ def main():
     parser = argparse.ArgumentParser(description='Rebase the Enarx kernels')
     parser.add_argument('-d', '--dryrun', action='store_true')
     parser.add_argument('-c', '--cwd')
+    parser.add_argument('-nr', '--norebase', action='store_true')
     parser.add_argument('-m', '--manifest')
     args = parser.parse_args()
 
@@ -99,8 +100,11 @@ def main():
             subprocess.run(cmd, check=True)
 
             cmd = [tools['git'], 'rebase', 'FETCH_HEAD']
-            print(cmd)
-            subprocess.run(cmd, check=True)
+            if not args.norebase:
+                print(cmd)
+                subprocess.run(cmd, check=True)
+            else:
+                print('skipping: ' + str(cmd))
 
             output = ''
             cmd = [tools['fedpkg'], '--release', release, 'srpm']
